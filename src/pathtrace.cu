@@ -294,14 +294,6 @@ __global__ void shadeFakeMaterial(
 				
 
 				scatterRay(pathSegments[idx], intersectPt, intersection.surfaceNormal, material, rng);
-			/*	if (material.hasRefractive > 0.0f)
-				{
-					pathSegments[idx].color = pathSegments[idx].color;
-				}
-				else
-				{
-					pathSegments[idx].color *= materialColor;
-				}*/
 				pathSegments[idx].color *= materialColor;
 				//float lightTerm = glm::dot(intersection.surfaceNormal, glm::vec3(0.0f, 1.0f, 0.0f));
 				//pathSegments[idx].color *= (materialColor * lightTerm) * 0.3f + ((1.0f - intersection.t * 0.02f) * materialColor) * 0.7f;

@@ -70,12 +70,12 @@ glm::vec3 DielectricScatter(
     thrust::uniform_real_distribution<float> u01(0, 1);
     normal = glm::normalize(normal);
     bool  front_face = glm::dot(pathSegment.ray.direction, normal) <0.0f;
-    normal = front_face ? normal : -normal;
-    double refraction_ratio = front_face ? (1.0f / m.hasRefractive) : m.hasRefractive;
+    //normal = front_face ? normal : -normal;
+    float refraction_ratio = front_face ? (1.0f / m.indexOfRefraction) : m.indexOfRefraction;
     
    glm::vec3 unit_direction = glm::normalize(pathSegment.ray.direction);
-   // double cos_theta = fmin(glm::dot(-unit_direction, normal), 1.0f);
-  /*  double sin_theta = sqrt(1.0f - cos_theta * cos_theta);
+    double cos_theta = fmin(glm::dot(-unit_direction, normal), 1.0f);
+    double sin_theta = sqrt(1.0f - cos_theta * cos_theta);
 
     bool cannot_refract = refraction_ratio * sin_theta > 1.0f;
     glm::vec3 direction;
@@ -83,9 +83,10 @@ glm::vec3 DielectricScatter(
     if (cannot_refract || reflectance(cos_theta, refraction_ratio) > u01(rng))
         direction = glm::reflect(unit_direction, normal);
     else
-        direction = refract(unit_direction, normal, u01(rng));*/
+        direction = refract(unit_direction, normal, u01(rng));
 
-    glm::vec3 direction = refract(unit_direction, normal, refraction_ratio);
+   // glm::vec3 direction = refract(unit_direction, normal, refraction_ratio);
+   //glm::vec3 direction = glm::refract(unit_direction, normal, refraction_ratio);
     return glm::normalize(direction);
 }
 
@@ -148,7 +149,7 @@ void scatterRay(
 
     /*if (near_zero(scatter_direction))
         scatter_direction = normal;*/
-    pathSegment.ray.origin = intersect;
+    pathSegment.ray.origin = intersect + scatter_direction * EPSILON;
     pathSegment.ray.direction = scatter_direction;
 
 }

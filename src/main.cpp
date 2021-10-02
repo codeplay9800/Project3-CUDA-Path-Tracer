@@ -66,13 +66,13 @@ int main(int argc, char** argv) {
     theta = glm::acos(glm::dot(glm::normalize(viewZY), glm::vec3(0, 1, 0)));
     ogLookAt = cam.lookAt;
     zoom = glm::length(cam.position - ogLookAt);
-    const char* filepath = "D:\GitHub\CIS565\Project3-CUDA-Path-Tracer\scenes\wahoo.obj";
-    const char* filename = "wahoo";
+    //const char* filepath = "D:\GitHub\CIS565\Project3-CUDA-Path-Tracer\scenes\wahoo.obj";
+    //const char* filename = "wahoo";
     // Initialize CUDA and GL components
-    //init();
+    init();
 
     // GLFW main loop
-    //mainLoop();
+    mainLoop();
 
     return 0;
 }
