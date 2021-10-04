@@ -86,7 +86,6 @@ int cacheNumPaths = 0;
 // TODO: static variables for device memory, any extra info you need, etc
 // ...
 
-TriangleCustom* dev_meshTriangles;
 
 bool usingCache = false;
 bool usingDOF= false;
@@ -100,6 +99,17 @@ void pathtraceInit(Scene* scene) {
 	cudaMemset(dev_image, 0, pixelcount * sizeof(glm::vec3));
 
 	cudaMalloc(&dev_paths, pixelcount * sizeof(PathSegment));
+
+	for (Geom currgeom : scene->geoms)
+	{
+		if (currgeom.type == OBJ)
+		{
+			int triangleCount = currgeom.triangleCount;
+			cudaMalloc(&currgeom.device_meshTriangles, triangleCount * sizeof(TriangleCustom));
+			cudaMemcpy(currgeom.device_meshTriangles, currgeom.host_meshTriangles, triangleCount * sizeof(TriangleCustom), cudaMemcpyHostToDevice);
+		}
+	}
+
 
 	cudaMalloc(&dev_geoms, scene->geoms.size() * sizeof(Geom));
 	cudaMemcpy(dev_geoms, scene->geoms.data(), scene->geoms.size() * sizeof(Geom), cudaMemcpyHostToDevice);
@@ -121,17 +131,7 @@ void pathtraceInit(Scene* scene) {
 
 	// Only Handles for one mesh Structore right now need to add functionality for more afterwards
 
-	for (int i = 0; i < scene->geoms.size(); i++)
-	{
-		if (scene->geoms[i].type == 2)
-		{
-			Geom meshGeom = scene->geoms[i];
-			int triangleCount = meshGeom.triangleCount;
-			cudaMalloc(&dev_meshTriangles, triangleCount * sizeof(TriangleCustom));
-			cudaMemcpy(dev_meshTriangles, meshGeom.meshTriangles, triangleCount * sizeof(TriangleCustom), cudaMemcpyHostToDevice);
-		}
-	}
-
+	
 	//dev_geoms->meshTriangles = dev_meshTriangles;
 
 	checkCUDAError("pathtraceInit");
@@ -148,6 +148,18 @@ void pathtraceFree() {
 	
 	cudaFree(dev_cache_paths);
 	cudaFree(dev_cache_intersections);
+
+	//for (int i = 0; i < scene->geoms.size(); i++)
+	//{
+	//	if (scene->geoms[i].type == 2)
+	//	{
+	//		Geom meshGeom = scene->geoms[i];
+	//		int triangleCount = meshGeom.triangleCount;
+	//		cudaMalloc(&meshGeom.device_meshTriangles, triangleCount * sizeof(TriangleCustom));
+	//		cudaMemcpy(meshGeom.device_meshTriangles, meshGeom.host_meshTriangles, triangleCount * sizeof(TriangleCustom), cudaMemcpyHostToDevice);
+	//	}
+	//}
+
 
 	checkCUDAError("pathtraceFree");
 }
@@ -234,7 +246,7 @@ __global__ void computeIntersections(
 	, PathSegment* pathSegments
 	, Geom* geoms
 	, int geoms_size
-	, ShadeableIntersection* intersections, TriangleCustom *dev_meshTriang
+	, ShadeableIntersection* intersections
 )
 {
 	int path_index = blockIdx.x * blockDim.x + threadIdx.x;
@@ -270,7 +282,7 @@ __global__ void computeIntersections(
 
 			else if (geom.type == OBJ)
 			{
-				t = MeshIntersectionTest(geom, dev_meshTriang,pathSegment.ray, tmp_intersect, tmp_normal, outside);
+				t = MeshIntersectionTest(geom,pathSegment.ray, tmp_intersect, tmp_normal, outside);
 			}
 			// TODO: add more intersection tests here... triangle? metaball? CSG?
 
@@ -577,7 +589,7 @@ void pathtrace(uchar4* pbo, int frame, int iter) {
 			, dev_paths
 			, dev_geoms
 			, hst_scene->geoms.size()
-			, dev_intersections, dev_meshTriangles
+			, dev_intersections
 			);
 		checkCUDAError("trace one bounce");
 		cudaDeviceSynchronize();

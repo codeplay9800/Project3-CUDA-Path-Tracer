@@ -34,7 +34,8 @@ struct Geom {
     glm::mat4 transform;
     glm::mat4 inverseTransform;
     glm::mat4 invTranspose;
-    TriangleCustom *meshTriangles;
+    TriangleCustom *host_meshTriangles;
+    TriangleCustom *device_meshTriangles;
     int triangleCount;
    // glm::vec3* points;
 };

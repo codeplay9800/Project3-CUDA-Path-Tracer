@@ -184,7 +184,7 @@ __host__ __device__ glm::vec4 GetBarycentricWeightedNormal(glm::vec4 a_p1, glm::
 }
 
 
-__host__ __device__ float MeshIntersectionTest(Geom objGeom,TriangleCustom *mesh, Ray r,
+__host__ __device__ float MeshIntersectionTest(Geom objGeom, Ray r,
     glm::vec3& intersectionPoint, glm::vec3& normal, bool& outside) {
     
     bool intersection = false;
@@ -199,9 +199,9 @@ __host__ __device__ float MeshIntersectionTest(Geom objGeom,TriangleCustom *mesh
         //glm::vec4 p3 = glm::vec3(multiplyMV(objGeom.transform, objGeom.meshTriangles[i].points[2]));
 
         //glm::mat4 modelMat = objGeom.transform;
-        glm::vec4 p1 = objGeom.transform * mesh[i].points_normals[0];
-        glm::vec4 p2 = objGeom.transform * mesh[i].points_normals[2];
-        glm::vec4 p3  = objGeom.transform * mesh[i].points_normals[4];
+        glm::vec4 p1 = objGeom.transform * objGeom.device_meshTriangles[i].points_normals[0];
+        glm::vec4 p2 = objGeom.transform * objGeom.device_meshTriangles[i].points_normals[2];
+        glm::vec4 p3  = objGeom.transform * objGeom.device_meshTriangles[i].points_normals[4];
 
 
        //  TriangleCustom abc = objGeom.meshTriangles[i];
