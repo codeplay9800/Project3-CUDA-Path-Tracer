@@ -184,7 +184,7 @@ __host__ __device__ glm::vec4 GetBarycentricWeightedNormal(glm::vec4 a_p1, glm::
 }
 
 
-__host__ __device__ float MeshIntersectionTest(Geom objGeom, Ray r,
+__host__ __device__ float MeshIntersectionTest(Geom &objGeom, Ray r,
     glm::vec3& intersectionPoint, glm::vec3& normal, bool& outside) {
     
     bool intersection = false;
