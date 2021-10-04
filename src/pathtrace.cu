@@ -129,8 +129,21 @@ void pathtraceInit(Scene* scene) {
 			int triangleCount = meshGeom.triangleCount;
 			cudaMalloc(&dev_meshTriangles, triangleCount * sizeof(TriangleCustom));
 			cudaMemcpy(dev_meshTriangles, meshGeom.meshTriangles, triangleCount * sizeof(TriangleCustom), cudaMemcpyHostToDevice);
+
+			for (int j = 0; j < meshGeom.triangleCount; j++)
+			{
+				std::cout << meshGeom.meshTriangles[j].points_normals[0][0] << meshGeom.meshTriangles[j].points_normals[0][1] << meshGeom.meshTriangles[j].points_normals[0][2];
+				std::cout << endl;
+				std::cout << meshGeom.meshTriangles[j].points_normals[2][0] << meshGeom.meshTriangles[j].points_normals[2][1] << meshGeom.meshTriangles[j].points_normals[2][2];
+				std::cout << endl;
+				std::cout << meshGeom.meshTriangles[j].points_normals[4][0] << meshGeom.meshTriangles[j].points_normals[4][1] << meshGeom.meshTriangles[j].points_normals[4][2];
+				std::cout << endl;
+				std::cout << endl;
+
+			}
 		}
 	}
+	
 
 	//dev_geoms->meshTriangles = dev_meshTriangles;
 

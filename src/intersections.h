@@ -200,6 +200,9 @@ __host__ __device__ float MeshIntersectionTest(Geom objGeom,TriangleCustom *mesh
     glm::vec4 p3;
 
     int count = objGeom.triangleCount;
+    Ray q;
+    q.origin = multiplyMV(objGeom.inverseTransform, glm::vec4(r.origin, 1.0f));
+    q.direction = glm::normalize(multiplyMV(objGeom.inverseTransform, glm::vec4(r.direction, 0.0f)));
 
     for (int i = 0; i < count; i++)
     {
@@ -208,21 +211,32 @@ __host__ __device__ float MeshIntersectionTest(Geom objGeom,TriangleCustom *mesh
         //glm::vec4 p3 = glm::vec3(multiplyMV(objGeom.transform, objGeom.meshTriangles[i].points[2]));
 
         //glm::mat4 modelMat = objGeom.transform;
-        glm::vec4 p_1 = objGeom.transform * mesh[i].points_normals[0];
+       /* glm::vec4 p_1 = objGeom.transform * mesh[i].points_normals[0];
         glm::vec4 p_2 = objGeom.transform * mesh[i].points_normals[2];
-        glm::vec4 p_3  = objGeom.transform * mesh[i].points_normals[4];
+        glm::vec4 p_3  = objGeom.transform * mesh[i].points_normals[4];*/
+        glm::vec4 p_1 = mesh[i].points_normals[0];
+        glm::vec4 p_2 = mesh[i].points_normals[2];
+        glm::vec4 p_3 = mesh[i].points_normals[4];
+        if (p_1[0] > 0.0f && p_1[1] > 0.0f && p_1[2] > 0.0f)
+        {
+            p_1 = p_1;
+        }
        //  TriangleCustom abc = objGeom.meshTriangles[i];
         //glm::vec4 p1 = objGeom.transform * glm::vec4(1, 1, 1, 1);
         //glm::vec4 p2 = objGeom.transform * glm::vec4(1, 2, 1, 1);
         //glm::vec4 p3  = objGeom.transform * glm::vec4(2, 1, 1, 1);
 
-        intersection = glm::intersectRayTriangle(r.origin, r.direction, glm::vec3(p_1), glm::vec3(p_2), glm::vec3(p_3), baryPos);
+        intersection = glm::intersectRayTriangle(q.origin, q.direction, glm::vec3(p_1), glm::vec3(p_2), glm::vec3(p_3), baryPos);
         if (intersection)
         {
             if (baryPos[2] > 0 && baryPos[2] < minBaryPos[2])
             {
                 minBaryPos = baryPos;
 
+                p1 = p_1;
+                p2 = p_2;
+                p3 = p_3;
+                
                 n1 = mesh[i].points_normals[1];
                 n2 = mesh[i].points_normals[3];
                 n3 = mesh[i].points_normals[5];
@@ -238,9 +252,9 @@ __host__ __device__ float MeshIntersectionTest(Geom objGeom,TriangleCustom *mesh
 
 
         interPoint = getPointOnRay(r, t);
-
-        internormal = glm::vec3(n1 * u + n2 * v + n3 * (1 - u - v));
-
+        interPoint = multiplyMV(objGeom.transform, glm::vec4(interPoint, 1.f));
+        internormal = glm::vec3(n3 * u + n1 * v + n2 * (1 - u - v));
+        
         intersectionPoint = interPoint;
         normal = internormal;
         return glm::length(r.origin - intersectionPoint);
