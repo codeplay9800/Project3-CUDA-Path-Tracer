@@ -122,8 +122,8 @@ SCALE       .01 10 10
 // Wahoo
 OBJECT 6
 obj
-material 5
-TRANS       0 2 0
+material 1
+TRANS       0 5 0
 ROTAT       0 0 0
-SCALE       1 1 1
+SCALE       2 2 2
 

@@ -186,6 +186,14 @@ __host__ __device__ float MeshIntersectionTest(Geom objGeom,TriangleCustom *mesh
     bool intersection = false;
     glm::vec3 interPoint;
     glm::vec3 internormal;
+
+    glm::vec3 baryPos;
+    glm::vec3 minBaryPos = glm::vec3(INT_MAX, INT_MAX, INT_MAX);;
+
+    glm::vec4 n1 ;
+    glm::vec4 n2 ;
+    glm::vec4 n3 ;
+
     int count = objGeom.triangleCount;
 
     for (int i = 0; i < count; i++)
@@ -198,30 +206,54 @@ __host__ __device__ float MeshIntersectionTest(Geom objGeom,TriangleCustom *mesh
         glm::vec4 p1 = objGeom.transform * mesh[i].points_normals[0];
         glm::vec4 p2 = objGeom.transform * mesh[i].points_normals[2];
         glm::vec4 p3  = objGeom.transform * mesh[i].points_normals[4];
-
-
        //  TriangleCustom abc = objGeom.meshTriangles[i];
         //glm::vec4 p1 = objGeom.transform * glm::vec4(1, 1, 1, 1);
         //glm::vec4 p2 = objGeom.transform * glm::vec4(1, 2, 1, 1);
         //glm::vec4 p3  = objGeom.transform * glm::vec4(2, 1, 1, 1);
 
-        intersection = glm::intersectRayTriangle(r.origin, r.direction, glm::vec3(p1), glm::vec3(p2), glm::vec3(p3), interPoint);
-
-
-
+        intersection = glm::intersectRayTriangle(r.origin, r.direction, glm::vec3(p1), glm::vec3(p2), glm::vec3(p3), baryPos);
         if (intersection)
         {
-          /*  glm::vec4 n1 = mesh[i].points_normals[1];
-            glm::vec4 n2 = mesh[i].points_normals[3];
-            glm::vec4 n3 = mesh[i].points_normals[5];
-            internormal = glm::vec3(GetBarycentricWeightedNormal(p1, n1, p2, n2, p3, n3, glm::vec4(interPoint, 1.0f)));
-            internormal = glm::normalize(internormal);*/
-            internormal = glm::triangleNormal(glm::vec3(p1), glm::vec3(p2), glm::vec3(p3));
-            break;
+           /* if (baryPos[2] > 0 && baryPos[2] < minBaryPos[2])
+            {
+                minBaryPos = baryPos;
+
+                float u = minBaryPos[0];
+                float v = minBaryPos[1];
+
+                n1 = mesh[i].points_normals[1];
+                n2 = mesh[i].points_normals[3];
+                n3 = mesh[i].points_normals[5];
+
+                internormal = glm::vec3(n1 * u + n2 * v + n3 * (1 - u - v));
+            }*/
+            float t = baryPos[2];
+            float u = baryPos[0];
+            float v = baryPos[1];
+            interPoint = getPointOnRay(r, t);
+
+            n1 = mesh[i].points_normals[1];
+            n2 = mesh[i].points_normals[3];
+            n3 = mesh[i].points_normals[5];
+
+            internormal = glm::vec3(n1 * u + n2 * v + n3 * (1 - u - v));
+
         }
     }
     if (intersection)
     {
+        /*float t = minBaryPos[2];
+        float u = minBaryPos[0];
+        float v = minBaryPos[1];*/
+
+       /* float t = baryPos[2];
+        float u = baryPos[0];
+        float v = baryPos[1];
+
+        interPoint = getPointOnRay(r, t);*/
+
+        //internormal = glm::vec3(n1 * u + n2 * v + n3 * (1 - u - v));
+
         intersectionPoint = interPoint;
         normal = internormal;
         return glm::length(r.origin - intersectionPoint);
