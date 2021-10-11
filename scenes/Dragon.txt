@@ -262,5 +262,5 @@ obj
 material 8
 TRANS       1 2.5 2
 ROTAT       0 210 0
-SCALE       0.1 0.1 0.1
+SCALE       3 3 3
 
