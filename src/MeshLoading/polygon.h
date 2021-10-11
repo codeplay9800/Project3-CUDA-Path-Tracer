@@ -15,6 +15,9 @@ struct Vertex
 
     Vertex(glm::vec4 p, glm::vec3 c, glm::vec4 n, glm::vec2 u)
         : m_pos(p), m_color(c), m_normal(n), m_uv(u)
+    {}  
+    Vertex(glm::vec4 p, glm::vec3 c, glm::vec4 n)
+        : m_pos(p), m_color(c), m_normal(n)
     {}
 };
 

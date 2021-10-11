@@ -87,7 +87,7 @@ int cacheNumPaths = 0;
 // ...
 
 
-bool usingCache = true;
+bool usingCache = false;
 bool usingDOF = false;
 bool useBVH = true;
 
@@ -111,10 +111,10 @@ void pathtraceInit(Scene* scene) {
 			cudaMemcpy(currGeom.Device_Triangle_points_normals, currGeom.Host_Triangle_points_normals, 6 * currGeom.triangleCount * sizeof(glm::vec4), cudaMemcpyHostToDevice);
 
 			//Copy Bound Volume Data
-			for (int i = 0; i < 14; i++)
+			/*for (int i = 0; i < 14; i++)
 			{
 				std::cout << currGeom.Host_BVH[i] << "\n";
-			}
+			}*/
 			cudaMalloc(&currGeom.Device_BVH, 14 * sizeof(float));
 			cudaMemcpy(currGeom.Device_BVH, currGeom.Host_BVH, 14 * sizeof(float), cudaMemcpyHostToDevice);
 		}
@@ -162,7 +162,7 @@ void pathtraceFree() {
 __device__ glm::vec3 random_in_unit_disk(thrust::default_random_engine& rng) {
 	thrust::uniform_real_distribution<float> u01(0, 1);
 	glm::vec3 p = glm::vec3(u01(rng), u01(rng), 0);
-	p = glm::normalize(p);
+	//p = glm::normalize(p);
 	return p;
 }
 
@@ -211,7 +211,7 @@ __global__ void generateRayFromCamera(Camera cam, int iter, int traceDepth, Path
 		if (usingDOF)
 		{
 			thrust::default_random_engine rng = makeSeededRandomEngine(iter, index, 0);
-			thrust::uniform_real_distribution<float> u01(0, 1);
+			thrust::uniform_real_distribution<float> u01(-0.5, 0.5);
 			double lens_radius = cam.aperture / 2;
 			glm::vec3 rd = float(lens_radius) * random_in_unit_disk(rng);
 			glm::vec3 offset = cam.up * rd.y + cam.right * rd.x;
@@ -433,6 +433,9 @@ __global__ void shadeBSDFMaterial(
 			// This can be useful for post-processing and image compositing.
 		}
 		else {
+			/*glm::vec3 unit_direction = glm::normalize(pathSegments->ray.direction);
+			auto t = 0.5f * (unit_direction.y + 1.0);
+			glm::vec3 skycolor =  (float)(1.0f - t) * glm::vec3(1.0f, 1.0f, 1.0f) + (float)t * glm::vec3(0.5f, 0.7f, 1.0f);*/
 			pathSegments[idx].color = glm::vec3(0.0f);
 			pathSegments[idx].remainingBounces = 0;
 		}

@@ -166,8 +166,10 @@ void ColorProcTex(PathSegment& pathSegment, const Material& m, glm::vec3 interse
     {
     case 1:
         pathSegment.color *= subsurfaceCol + ProcColorValue(u, v, intersect);
+        break;
     case 2:
         pathSegment.color *= subsurfaceCol + ProcColorValue2(u, v, intersect);
+        break;
     default:
         break;
     }

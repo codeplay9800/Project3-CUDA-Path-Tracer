@@ -14,8 +14,8 @@ static bool camchanged = true;
 static float dtheta = 0, dphi = 0;
 static glm::vec3 cammove;
 
-static double aperture = 0.2;
-static double focus_dist = 3.0f;
+static double aperture = 2;
+static double focus_dist = 15.0f;
 float zoom, theta, phi;
 glm::vec3 cameraPosition;
 glm::vec3 ogLookAt; // for recentering the camera
@@ -68,7 +68,14 @@ Polygon LoadOBJ(const char* file, char* polyName, Geom& objGeom)
 			}
 			for (unsigned int j = 0; j < pos.size(); j++)
 			{
-				p.AddVertex(Vertex(pos[j], glm::vec3(255, 255, 255), nor[j], uv[j]));
+				if(uv.size() ==0)
+				{
+					p.AddVertex(Vertex(pos[j], glm::vec3(255, 255, 255), nor[j]));
+				}
+				else
+				{
+					p.AddVertex(Vertex(pos[j], glm::vec3(255, 255, 255), nor[j], uv[j]));
+				}
 			}
 
 			std::vector<unsigned int> indices = shapes[i].mesh.indices;
@@ -111,7 +118,7 @@ Polygon LoadOBJ(const char* file, char* polyName, Geom& objGeom)
 void GenerateProceduralStructure1(vector<Geom> &geoms, vector<Material>& mats, GeomType geomType)
 {
 	vector<glm::vec3> posValues;
-	Turtle buildingTurtle1 = Turtle(glm::vec3(0.0f, 5.0f, 0.0f), glm::vec3(1, 0, 0), glm::vec3(0, 0, 1),
+	Turtle buildingTurtle1 = Turtle(glm::vec3(7.0f, 0.0f, 0.0f), glm::vec3(1, 0, 0), glm::vec3(0, 0, 1),
 		glm::vec3(0, 1, 0), 0.5f, 1);
 	buildingTurtle1.m_rotateAngle = 90.0f;
 	buildingTurtle1.m_takeRandomRotationsForward = false;
@@ -120,7 +127,7 @@ void GenerateProceduralStructure1(vector<Geom> &geoms, vector<Material>& mats, G
 	Rule F_Rule1(F_Conditions);
 	BuildingSystem1->AddRule('F', F_Rule1);
 	BuildingSystem1->AssignAxiom("-F");
-	BuildingSystem1->LSystemParse(4);
+	BuildingSystem1->LSystemParse(3);
 	//BuildingSystem1->PrintParsedSystem();
 	BuildingSystem1->CarveBuilding(posValues, geoms, mats, geomType);
 }
@@ -128,7 +135,7 @@ void GenerateProceduralStructure1(vector<Geom> &geoms, vector<Material>& mats, G
 void GenerateProceduralStructure2(vector<Geom>& geoms, vector<Material>& mats, GeomType geomType)
 {
 	vector<glm::vec3> posValues;
-	Turtle buildingTurtle2 = Turtle(glm::vec3(0.0f, 5.0f, 3.0f), glm::vec3(1, 0, 0), glm::vec3(0, 0, 1),
+	Turtle buildingTurtle2 = Turtle(glm::vec3(7.0f, 0.0f, 0.0f), glm::vec3(1, 0, 0), glm::vec3(0, 0, 1),
 		glm::vec3(0, 1, 0), 0.5f, 1);
 	buildingTurtle2.m_rotateAngle = 90.0f;
 	buildingTurtle2.m_takeRandomRotationsForward = false;
@@ -137,7 +144,7 @@ void GenerateProceduralStructure2(vector<Geom>& geoms, vector<Material>& mats, G
 	Rule X_Rule(X_Conditions2);
 	BuildingSystem2.get()->AddRule('X', X_Rule);
 	BuildingSystem2.get()->AssignAxiom("FX");
-	BuildingSystem2.get()->LSystemParse(5);
+	BuildingSystem2.get()->LSystemParse(3);
 	BuildingSystem2->CarveBuilding(posValues, geoms, mats, geomType);
 }
 
@@ -160,23 +167,23 @@ void GenerateProceduralStructure3(vector<Geom>& geoms, vector<Material>& mats, G
 void GenerateProceduralStructure4(vector<Geom>& geoms, vector<Material>& mats, GeomType geomType)
 {
 	vector<glm::vec3> posValues;
-	Turtle buildingTurtle1 = Turtle(glm::vec3(0.0f, 5.0f, 0.0f), glm::vec3(1, 0, 0), glm::vec3(0, 0, 1),
-		glm::vec3(0, 1, 0), 0.5f, 1);
-	buildingTurtle1.m_rotateAngle = 30.0f;
+	Turtle buildingTurtle1 = Turtle(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1, 0, 0), glm::vec3(0, 0, 1),
+		glm::vec3(0, 1, 0), 0.2f, 0.5);
+	buildingTurtle1.m_rotateAngle = 45.0f;
 	buildingTurtle1.m_takeRandomRotationsForward = false;
 	LSystem* BuildingSystem3 = new LSystem(buildingTurtle1);
 	std::vector<PostCondition> F_Conditions = { PostCondition(1.0, "F[-F]F[+F][F]") };
 	Rule F_Rule1(F_Conditions);
 	BuildingSystem3->AddRule('F', F_Rule1);
 	BuildingSystem3->AssignAxiom("F");
-	BuildingSystem3->LSystemParse(3);
+	BuildingSystem3->LSystemParse(5);
 	BuildingSystem3->CarveBuilding(posValues, geoms, mats, geomType);
 }
 
 void GenerateProceduralStructure5(vector<Geom>& geoms, vector<Material>& mats, GeomType geomType)
 {
 	vector<glm::vec3> posValues;
-	Turtle buildingTurtle3 = Turtle(glm::vec3(0.0f, 5.0f, 0.0f), glm::vec3(1, 0, 0), glm::vec3(0, 0, 1),
+	Turtle buildingTurtle3 = Turtle(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1, 0, 0), glm::vec3(0, 0, 1),
 		glm::vec3(0, 1, 0), 0.5f, 1);
 	buildingTurtle3.m_rotateAngle = 30.0f;
 	buildingTurtle3.m_takeRandomRotationsForward = false;
@@ -185,7 +192,7 @@ void GenerateProceduralStructure5(vector<Geom>& geoms, vector<Material>& mats, G
 	Rule X_Rul3(X_Conditions3);
 	BuildingSystem3.get()->AddRule('X', X_Rul3);
 	BuildingSystem3.get()->AssignAxiom("FX");
-	BuildingSystem3.get()->LSystemParse(5);
+	BuildingSystem3.get()->LSystemParse(4);
 	BuildingSystem3.get()->CarveBuilding(posValues, geoms, mats, geomType);
 }
 
@@ -205,7 +212,7 @@ int main(int argc, char** argv) {
 	// Load scene file
 	scene = new Scene(sceneFile);
 
-	//GenerateProceduralStructure4(scene->geoms, scene->materials, SPHERE);
+	//GenerateProceduralStructure4(scene->geoms, scene->materials, CUBE);
 	//generateProcedural(scene->geoms, scene->materials);
 	// Set up camera stuff from loaded path tracer settings
 	iteration = 0;
@@ -234,6 +241,9 @@ int main(int argc, char** argv) {
 	const char* filepathWahoo = "D:/GitHub/CIS565/Project3-CUDA-Path-Tracer/scenes/wahoo.obj";
 	const char* filepathCube = "D:/GitHub/CIS565/Project3-CUDA-Path-Tracer/scenes/cube.obj";
 	const char* filepathbunny = "D:/GitHub/CIS565/Project3-CUDA-Path-Tracer/scenes/stanford-bunny.obj";
+	const char* filepathsuzzane = "D:/GitHub/CIS565/Project3-CUDA-Path-Tracer/scenes/suzanne.obj";
+	const char* filepathDragon = "D:/GitHub/CIS565/Project3-CUDA-Path-Tracer/scenes/xyzDragon10.obj";
+	const char* filepathLucy = "D:/GitHub/CIS565/Project3-CUDA-Path-Tracer/scenes/Lucy10.obj";
 	Polygon p;
 	char* filename = "wahoo";
 
@@ -241,7 +251,7 @@ int main(int argc, char** argv) {
 	{
 		if ((int)scene->geoms[i].type == 2)
 		{
-			p = LoadOBJ(filepathWahoo, filename, scene->geoms[i]);
+			p = LoadOBJ(filepathLucy, filename, scene->geoms[i]);
 
 		}
 	}

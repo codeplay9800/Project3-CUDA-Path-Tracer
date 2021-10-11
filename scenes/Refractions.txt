@@ -83,14 +83,27 @@ SPECEX      0
 SPECRGB     .98 .98 .98
 REFL        0
 REFR        1
-REFRIOR     2
+REFRIOR     2.5
 EMITTANCE   0
 usingProcTex 0
 isSubSurface 0
 ProcTexNum 0
 
-// Refractive Red
+// Refractive white
 MATERIAL 7
+RGB         .98 .98 .98
+SPECEX      0
+SPECRGB     .98 .84 .98
+REFL        0
+REFR        0
+REFRIOR     2
+EMITTANCE   0
+usingProcTex 1
+isSubSurface 0
+ProcTexNum 2
+
+// Refractive Red
+MATERIAL 8
 RGB         .98 .98 .98
 SPECEX      0
 SPECRGB     .98 0.1 0.1
@@ -103,7 +116,7 @@ isSubSurface 1
 ProcTexNum 0
 
 // Diffuse Indigo
-MATERIAL 8
+MATERIAL 9
 RGB         0.3 0.0 0.50
 SPECEX      0
 SPECRGB     0.0	0.0 0.0
@@ -115,31 +128,31 @@ usingProcTex 0
 isSubSurface 0
 ProcTexNum 0
 
-// Procedural Texture 1
-MATERIAL 9
-RGB         .98 .98 .98
-SPECEX      0
-SPECRGB     .98 .84 .98
-REFL        0
-REFR        0
-REFRIOR     2
-EMITTANCE   0
-usingProcTex 1
-isSubSurface 0
-ProcTexNum 1
-
-// Procedural Texture 2
+// Refractive white
 MATERIAL 10
 RGB         .98 .98 .98
 SPECEX      0
-SPECRGB     .98 .84 .98
+SPECRGB     0.0 0.0 0.0
 REFL        0
-REFR        0
-REFRIOR     2
+REFR        1
+REFRIOR     1.2
 EMITTANCE   0
-usingProcTex 1
+usingProcTex 0
 isSubSurface 0
-ProcTexNum 2
+ProcTexNum 0
+
+// Refractive white
+MATERIAL 11
+RGB         .98 .98 .98
+SPECEX      0
+SPECRGB     0.0 0.0 0.0
+REFL        0.2
+REFR        0.8
+REFRIOR     1.2
+EMITTANCE   0
+usingProcTex 0
+isSubSurface 0
+ProcTexNum 0
 
 // Camera
 CAMERA
@@ -171,7 +184,7 @@ SCALE       20 .01 20
 // Ceiling
 OBJECT 2
 cube
-material 2
+material 1
 TRANS       0 10 0
 ROTAT       0 0 90
 SCALE       .01 20 20
@@ -179,7 +192,7 @@ SCALE       .01 20 20
 // Back wall
 OBJECT 3
 cube
-material 1
+material 7
 TRANS       0 5 -5
 ROTAT       0 90 0
 SCALE       .01 10 20
@@ -195,7 +208,7 @@ SCALE       .01 10 20
 // Right wall
 OBJECT 5
 cube
-material 8
+material 9
 TRANS       10 5 0
 ROTAT       0 0 0
 SCALE       .01 10 20
@@ -216,34 +229,26 @@ TRANS       6 10 0
 ROTAT       0 0 0
 SCALE       5 .3 5
 
-// Cube Platform
-OBJECT 8
-cube
-material 1
-TRANS       4 1.5 0
-ROTAT       0 0 0
-SCALE       1 3 1
-
-// Cube Platform
-OBJECT 9
-cube
-material 1
-TRANS       -4 1.5 0
-ROTAT       0 0 0
-SCALE       1 3 1
-
 // Sphere
-OBJECT 10
+OBJECT 8
 sphere
-material 9
-TRANS       4 4.5 0
+material 11
+TRANS       4 2.5 0
 ROTAT       0 0 0
-SCALE       4 4 4
+SCALE       3 3 3
 
 // Sphere2
-OBJECT 11
+OBJECT 9
+sphere
+material 6
+TRANS       0 2.5 0
+ROTAT       0 0 0
+SCALE       3 3 3
+
+// Sphere3
+OBJECT 10
 sphere
 material 10
-TRANS       -4 4.5 0
+TRANS       -4 2.5 0
 ROTAT       0 0 0
-SCALE       4 4 4
+SCALE       3 3 3

@@ -207,7 +207,7 @@ Geom createNewGeom(glm::vec3 currPos, int materialID, enum GeomType type) {
 
         newGeom.translation = currPos;
         newGeom.rotation = glm::vec3(0, 0, 0);
-        newGeom.scale = glm::vec3(0.5, 0.5, 0.5);
+        newGeom.scale = glm::vec3(0.2, 0.2, 0.2);
         newGeom.transform = utilityCore::buildTransformationMatrix(
             newGeom.translation, newGeom.rotation, newGeom.scale);
         newGeom.inverseTransform = glm::inverse(newGeom.transform);
@@ -222,7 +222,7 @@ void LSystem::CarveBuilding(std::vector<glm::vec3> &procShape, std::vector<Geom>
     glm::vec3 a = currTurtle->m_Position;
     glm::vec3 b = currTurtle->m_Position;
 
-    int startIdxMat = CreateNewMaterial(materials);
+    //int startIdxMat = CreateNewMaterial(materials);
     float r1 = currTurtle->radius;
     float r2 = currTurtle->radius;
 
@@ -258,15 +258,16 @@ void LSystem::CarveBuilding(std::vector<glm::vec3> &procShape, std::vector<Geom>
                                 {
                                     auto choose_mat = random_double();
                                     procShape.push_back(currpos);
-                                    if (choose_mat < 0.8) {
-                                        geoms.push_back(createNewGeom(currpos, startIdxMat, type));
+                                    geoms.push_back(createNewGeom(currpos, 10, type));
+                                /*    if (choose_mat < 0.4) {
+                                        geoms.push_back(createNewGeom(currpos, 10, type));
                                     }
-                                    else if (choose_mat < 0.95) {
-                                        geoms.push_back(createNewGeom(currpos, startIdxMat + 1, type));
+                                    else if (choose_mat < 0.7) {
+                                        geoms.push_back(createNewGeom(currpos, 1, type));
                                     }
                                     else {
-                                        geoms.push_back(createNewGeom(currpos, startIdxMat + 2, type));
-                                    }
+                                        geoms.push_back(createNewGeom(currpos, 7, type));
+                                    }*/
                                 }
                             }
 

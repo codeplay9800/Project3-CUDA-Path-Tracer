@@ -50,6 +50,19 @@ usingProcTex 0
 isSubSurface 0
 ProcTexNum 0
 
+// Refractive Purple
+MATERIAL 3
+RGB         .98 .98 .98
+SPECEX      1
+SPECRGB     .8 .8 .98
+REFL        0
+REFR        1
+REFRIOR     10
+EMITTANCE   0
+usingProcTex 0
+isSubSurface 0
+ProcTexNum 0
+
 // Camera
 CAMERA
 RES         800 800
@@ -75,7 +88,7 @@ obj
 material 1
 TRANS       0 0 0
 ROTAT       0 0 0
-SCALE       1 1 1
+SCALE       0.05 0.05 0.05
 
 // Front light
 OBJECT 2
